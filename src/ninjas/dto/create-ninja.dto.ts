@@ -1,4 +1,4 @@
-import { IsEnum, IsString, Length, MinLength } from 'class-validator';
+import { IsEnum, IsString, Length } from 'class-validator';
 
 enum Weapon {
   Stars = 'stars',

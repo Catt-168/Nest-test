@@ -10,12 +10,19 @@ import {
   Put,
   Query,
   UseGuards,
+  UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateNinjaDto } from './dto/create-ninja.dto';
 import { UpdateNinjaDto } from './dto/update-ninja.dto';
 import { NinjasService } from './ninjas.service';
 import { BeltGuard } from '../belt/belt.guard';
+import { IdParamDto } from './dto/idParam.dto';
+import { ZodValidationPipe } from './pipes/zodValidationPipe';
+import {
+  createNinjaSchema,
+  CreateNinjaZodDto,
+} from './dto/create-ninja-zod.dto';
 
 @Controller('ninjas')
 export class NinjasController {
@@ -28,7 +35,7 @@ export class NinjasController {
   }
 
   @Get(':id')
-  getSinleNinja(@Param('id', ParseIntPipe) id: number) {
+  getSinleNinja(@Param() { id }: IdParamDto) {
     try {
       return this.ninjasService.getNinja(id);
     } catch (e) {
@@ -37,10 +44,11 @@ export class NinjasController {
   }
 
   @Post()
+  @UsePipes(new ZodValidationPipe(createNinjaSchema))
   @UseGuards(BeltGuard)
   postNinja(
     @Body()
-    createNinjaDto: CreateNinjaDto,
+    createNinjaDto: CreateNinjaZodDto,
   ) {
     return this.ninjasService.createNinja(createNinjaDto);
   }
@@ -48,7 +56,7 @@ export class NinjasController {
   @Put(':id')
   putNinja(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ValidationPipe({ groups: ['update'], always: true }))
+    @Body()
     updateNinjaDto: UpdateNinjaDto,
   ) {
     return this.ninjasService.updateNinja(id, updateNinjaDto);

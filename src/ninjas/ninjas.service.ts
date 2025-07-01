@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateNinjaDto } from './dto/create-ninja.dto';
 import { UpdateNinjaDto } from './dto/update-ninja.dto';
+import { IdParamDto } from './dto/idParam.dto';
+import { CreateNinjaZodDto } from './dto/create-ninja-zod.dto';
 
 @Injectable()
 export class NinjasService {
@@ -24,7 +26,7 @@ export class NinjasService {
     return ninja;
   }
 
-  createNinja(createNinjaDto: CreateNinjaDto) {
+  createNinja(createNinjaDto: CreateNinjaZodDto) {
     const newNinja = {
       ...createNinjaDto,
       id: Date.now(),
